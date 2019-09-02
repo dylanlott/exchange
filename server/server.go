@@ -33,6 +33,9 @@ func NewRouter() http.Handler {
 	// Set up our API
 	router.Mount("/api/v1/", v1.NewRouter())
 
+	// serve static assets from './static'
+	router.Handle("/*", http.FileServer(http.Dir("./static")))
+
 	// TODO: Set up static file serving
 	// staticPath, _ := filepath.Abs("../../static/")
 	// fs := http.FileServer(unindexed.Dir(staticPath))
