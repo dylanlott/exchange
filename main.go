@@ -12,7 +12,6 @@ import (
 )
 
 func main() {
-	// This is the domain the server should accept connections for.
 	handler := server.NewRouter()
 	srv := &http.Server{
 		Addr:         ":9000",

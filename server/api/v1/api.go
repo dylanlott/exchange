@@ -75,6 +75,7 @@ func RequireAuthentication(next http.Handler) http.Handler {
 func NewRouter() http.Handler {
 	r := chi.NewRouter()
 
+	// Require authentication on all endpoints
 	r.Use(RequireAuthentication)
 
 	// Register the API routes

@@ -1,0 +1,31 @@
+model user (
+	key    pk
+	unique id
+	unique name
+
+	field pk         serial64
+	field created_at timestamp ( autoinsert )
+	field updated_at timestamp ( autoinsert, autoupdate )
+	field id         text
+	field name       text
+) 
+
+model lead (
+	key		pk
+
+	field pk			serial64
+	field created_at	timestamp ( autoinsert )
+	field updated_at	timestamp ( autoinsert )
+	field industry		text
+)
+
+model campaign(
+	key     pk
+    unique  id
+
+    field pk            serial64
+    field id            text
+	field created_at	timestamp ( autoinsert )
+	field updated_at	timestamp ( autoinsert )
+	field industry		text
+)

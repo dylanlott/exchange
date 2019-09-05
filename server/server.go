@@ -36,10 +36,5 @@ func NewRouter() http.Handler {
 	// serve static assets from './static'
 	router.Handle("/*", http.FileServer(http.Dir("./static")))
 
-	// TODO: Set up static file serving
-	// staticPath, _ := filepath.Abs("../../static/")
-	// fs := http.FileServer(unindexed.Dir(staticPath))
-	// router.Handle("/*", fs)
-
 	return router
 }
