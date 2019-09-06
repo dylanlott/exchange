@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -10,11 +9,6 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
-
-// HelloWorld is a sample handler
-func HelloWorld(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello world!")
-}
 
 // NewRouter returns a new HTTP handler that implements the main server routes
 func NewRouter() http.Handler {
@@ -27,14 +21,11 @@ func NewRouter() http.Handler {
 	router.Use(middleware.DefaultCompress)
 	router.Use(middleware.Timeout(60 * time.Second))
 
-	// Set up our root handlers
-	router.Get("/", HelloWorld)
-
 	// Set up our API
 	router.Mount("/api/v1/", v1.NewRouter())
 
-	// serve static assets from './static'
-	router.Handle("/*", http.FileServer(http.Dir("./static")))
+	// serve web app
+	router.Handle("/*", http.FileServer(http.Dir("./web/exchange/dist")))
 
 	return router
 }

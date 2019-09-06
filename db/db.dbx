@@ -1,15 +1,37 @@
+// 
+// Users
+//
 model user (
 	key    pk
 	unique id
-	unique name
+    unique email
 
-	field pk         serial64
-	field created_at timestamp ( autoinsert )
-	field updated_at timestamp ( autoinsert, autoupdate )
-	field id         text
-	field name       text
+	field pk            serial64
+	field created_at    timestamp ( autoinsert )
+	field updated_at    timestamp ( autoinsert, autoupdate )
+	field id            text
+	field name          text
+    field email         text
+    field password      text 
+    field role          text
+    field industry      text
 ) 
 
+create user()
+read one (
+    select user
+    where user.id = ?
+)
+
+// list by industry
+read limitoffset (
+    select user
+    where user.industry = ?
+)
+
+// 
+// Leads 
+//
 model lead (
 	key		pk
 
@@ -18,7 +40,11 @@ model lead (
 	field updated_at	timestamp ( autoinsert )
 	field industry		text
 )
+create lead()
 
+// 
+// Campaigns
+//
 model campaign(
 	key     pk
     unique  id
@@ -28,4 +54,24 @@ model campaign(
 	field created_at	timestamp ( autoinsert )
 	field updated_at	timestamp ( autoinsert )
 	field industry		text
+)
+
+create campaign()
+
+read limitoffset(
+    select campaign
+    where campaign.industry = ?
+)
+
+// 
+// Marketing
+//
+// For email marketing capture form
+model marketing(
+    key     pk
+    unique  email
+
+    field pk            serial64
+    field email         text
+    field created_at    timestamp
 )

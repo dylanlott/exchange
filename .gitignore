@@ -12,3 +12,6 @@
 *.out
 
 cmd/boilerplate/boilerplate
+
+# Web app exclusions
+./web/exchange/node_modules/
