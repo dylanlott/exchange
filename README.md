@@ -2,9 +2,18 @@
 
 > a lead exchange and generation platform
 
+#Development
 
-# build binaries 
+## run web app in development
+`cd web/exchange/ && npm run dev`
+
+## run server for development
+`go run main.go`
+
+# Building and Production 
+
+## build binaries 
 `go build main.go`
 
-# run server
-`go run main.go`
+## build docker image 
+`docker build -t exchange .`
