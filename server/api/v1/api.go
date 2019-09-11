@@ -3,12 +3,13 @@ package v1
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
-	"log"
-
 	"github.com/go-chi/chi"
+
+	database "github.com/dylanlott/exchange/db"
 )
 
 // ValidBearer is a hardcoded bearer token for demonstration purposes.
@@ -17,6 +18,7 @@ const ValidBearer = "123456"
 // HelloResponse is the JSON representation for a customized message
 type HelloResponse struct {
 	Message string `json:"message"`
+	Version string `json:"version"`
 }
 
 func jsonResponse(w http.ResponseWriter, data interface{}, c int) {
@@ -34,7 +36,8 @@ func jsonResponse(w http.ResponseWriter, data interface{}, c int) {
 // HelloWorld returns a basic "Hello World!" message
 func HelloWorld(w http.ResponseWriter, r *http.Request) {
 	response := HelloResponse{
-		Message: "Hello world!",
+		Message: "Tribal Exchange API V1",
+		Version: "0.0.1",
 	}
 	jsonResponse(w, response, http.StatusOK)
 }
@@ -72,7 +75,7 @@ func RequireAuthentication(next http.Handler) http.Handler {
 }
 
 // NewRouter returns an HTTP handler that implements the routes for the API
-func NewRouter() http.Handler {
+func NewRouter(db *database.DB) http.Handler {
 	r := chi.NewRouter()
 
 	// Require authentication on all endpoints

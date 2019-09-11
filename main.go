@@ -8,11 +8,17 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/dylanlott/exchange/db"
 	"github.com/dylanlott/exchange/server"
 )
 
 func main() {
-	handler := server.NewRouter()
+	d, err := db.Open("postgres", "user=")
+	if err != nil {
+		log.Fatalf("failed to start database %+v", err)
+		return
+	}
+	handler := server.NewRouter(d)
 	srv := &http.Server{
 		Addr:         ":9000",
 		Handler:      handler,
