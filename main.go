@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,11 +14,20 @@ import (
 )
 
 func main() {
-	d, err := db.Open("postgres", "user=")
+	log.Printf("connecting to %s", connString())
+	d, err := db.Open("postgres", connString())
 	if err != nil {
 		log.Fatalf("failed to start database %+v", err)
 		return
 	}
+
+	// ping the DB to check connection is working
+	err = d.Ping()
+	if err != nil {
+		log.Fatalf("failed to open connection to database %+v", err)
+		return
+	}
+
 	handler := server.NewRouter(d)
 	srv := &http.Server{
 		Addr:         ":9000",
@@ -39,4 +49,10 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	srv.Shutdown(ctx)
+}
+
+func connString() string {
+	return fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		"127.0.0.1", 5432, "postgres", "", "exchange")
 }
