@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -14,8 +13,8 @@ import (
 )
 
 func main() {
-	log.Printf("connecting to %s", connString())
-	d, err := db.Open("postgres", connString())
+	ctx := context.Background()
+	d, err := db.OpenDB(ctx)
 	if err != nil {
 		log.Fatalf("failed to start database %+v", err)
 		return
@@ -27,6 +26,9 @@ func main() {
 		log.Fatalf("failed to open connection to database %+v", err)
 		return
 	}
+
+	driver := "postgresql://postgres@localhost:5432?sslmode=disable"
+	d.Migrate(driver, "file://db/migrations/")
 
 	handler := server.NewRouter(d)
 	srv := &http.Server{
@@ -49,10 +51,4 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	srv.Shutdown(ctx)
-}
-
-func connString() string {
-	return fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		"127.0.0.1", 5432, "postgres", "", "exchange")
 }
