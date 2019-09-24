@@ -8,12 +8,28 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/spf13/viper"
+
 	"github.com/dylanlott/exchange/db"
 	"github.com/dylanlott/exchange/server"
 )
 
 func main() {
 	ctx := context.Background()
+
+	viper.AddConfigPath("./")
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			log.Print("config file not found in root")
+			return
+		}
+
+		log.Print("failed to configure application: %+v", err.Error())
+		return
+	}
+	// Automatically read in environment variables
+	viper.AutomaticEnv()
+
 	d, err := db.OpenDB(ctx)
 	if err != nil {
 		log.Fatalf("failed to start database %+v", err)
